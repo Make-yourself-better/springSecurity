@@ -4,10 +4,15 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.util.Date;
 import java.io.Serializable;
+
+import com.xxl.springsecurity.utils.valid.ListValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -28,12 +33,15 @@ public class AclUser implements Serializable {
       @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
+    @NotEmpty(message = "用户名不能为空")
     @ApiModelProperty(value = "微信openid")
     private String username;
 
+    @NotEmpty(message = "密码不能为空")
     @ApiModelProperty(value = "密码")
     private String password;
 
+    @NotEmpty(message = "昵称不能为空")
     @ApiModelProperty(value = "昵称")
     private String nickName;
 
@@ -48,9 +56,14 @@ public class AclUser implements Serializable {
     @TableLogic
     private Boolean deleted;
 
+    /*@ListValue(values = {0,1}) //自定义校验注解
+    @TableField(exist = false)
+    private Integer showStatus;*/
+
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间")
     private Date gmtCreate;
+
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;

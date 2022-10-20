@@ -13,9 +13,13 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import javax.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,13 +58,24 @@ public class AclUserController {
     }
 
     @ApiOperation(value = "新增管理用户")
-    @PostMapping("save")
-    public R save(@RequestBody AclUser aclUser) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encodePassword = bCryptPasswordEncoder.encode(aclUser.getPassword());
-        aclUser.setPassword(encodePassword);
-        aclUserService.save(aclUser);
-        return R.ok();
+    @PostMapping("save")                          //,不是统一异常处理必须加上 BindingResult bindingResult
+    public R save( @Valid @RequestBody AclUser aclUser) {
+//        if (bindingResult.hasErrors()){
+//            Map<String, Object> map = new HashMap<>();
+//            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+//            fieldErrors.stream().forEach(fieldError -> {
+//                String field = fieldError.getField();
+//                String message = fieldError.getDefaultMessage();
+//                map.put(field,message);
+//            });
+//            return R.error().data(map);
+//        }
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String encodePassword = bCryptPasswordEncoder.encode(aclUser.getPassword());
+            aclUser.setPassword(encodePassword);
+            aclUserService.save(aclUser);
+            return R.ok();
+
     }
     @ApiOperation(value = "修改管理用户")
     @PutMapping("update")
